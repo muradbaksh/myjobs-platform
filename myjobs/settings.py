@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'reviews',
     'compensation',
     'analytics',
+    "accounts.admin_panel.AccountsConfig",
 
     # auth
     'django.contrib.sites',
