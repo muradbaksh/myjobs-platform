@@ -21,8 +21,8 @@ def register(request):
     if request.method == "POST":
         form = RegisterForm(request.POST)
         if form.is_valid():
-            user = form.save(commit=False)
-            user.is_active = False
+            # user = form.save(commit=False)
+            # user.is_active = False
             user.save()
 
             # uid = urlsafe_base64_encode(force_bytes(user.pk))
@@ -47,7 +47,7 @@ def register(request):
             # thread.daemon = True
             # thread.start()
 
-            messages.success(request, "Registration successful. Please verify your email.")
+            messages.success(request, "Registration successful. Please login.")
             return redirect('login')
     else:
         form = RegisterForm()
@@ -60,27 +60,27 @@ from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
-def verify_email(request, uidb64, token):
-    try:
-        uid = urlsafe_base64_decode(uidb64).decode()
-        user = User.objects.get(pk=uid)
+# def verify_email(request, uidb64, token):
+#     try:
+#         uid = urlsafe_base64_decode(uidb64).decode()
+#         user = User.objects.get(pk=uid)
 
-        if email_token.check_token(user, token):
-            user.is_active = True
-            user.is_verified = True
-            user.save()
-            messages.success(
-                request,
-                "Email verified successfully."
-            )
-            return redirect('login')
+#         if email_token.check_token(user, token):
+#             user.is_active = True
+#             user.is_verified = True
+#             user.save()
+#             messages.success(
+#                 request,
+#                 "Email verified successfully."
+#             )
+#             return redirect('login')
 
-    except:
-        messages.error(
-            request,
-            "Verification failed."
-        )
-    return render(request, 'verify_failed.html')
+#     except:
+#         messages.error(
+#             request,
+#             "Verification failed."
+#         )
+#     return render(request, 'verify_failed.html')
 
 
 
