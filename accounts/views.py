@@ -23,7 +23,7 @@ def register(request):
         if form.is_valid():
             # user = form.save(commit=False)
             # user.is_active = False
-            user.save()
+            user = form.save()
 
             # uid = urlsafe_base64_encode(force_bytes(user.pk))
             # token = email_token.make_token(user)
