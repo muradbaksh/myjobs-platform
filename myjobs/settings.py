@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/6.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
-
+import cloudinary
 import environ
 import dj_database_url
 from pathlib import Path
@@ -195,3 +195,10 @@ EMAIL_HOST_USER = 'almasforhasi1999@gmail.com'
 EMAIL_HOST_PASSWORD = 'rlwy pvno glhb prao'
 
 DEFAULT_FROM_EMAIL = 'MYJOBS <noreply@myjobs.com>'
+
+cloudinary.config(
+    cloud_name=env("CLOUDINARY_CLOUD_NAME"),
+    api_key=env("CLOUDINARY_API_KEY"),
+    api_secret=env("CLOUDINARY_API_SECRET"),
+)
+DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
