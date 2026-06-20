@@ -25,27 +25,27 @@ def register(request):
             user.is_active = False
             user.save()
 
-            uid = urlsafe_base64_encode(force_bytes(user.pk))
-            token = email_token.make_token(user)
-            link = f"https://myjobs-platform.onrender.com/accounts/verify/{uid}/{token}/"
+            # uid = urlsafe_base64_encode(force_bytes(user.pk))
+            # token = email_token.make_token(user)
+            # link = f"https://myjobs-platform.onrender.com/accounts/verify/{uid}/{token}/"
 
             # Email background thread এ পাঠাবে — user wait করবে না
-            def send_verification_email():
-                try:
-                    send_mail(
-                        "Verify your MYJOBS account",
-                        f"Click to verify: {link}",
-                        "noreply@myjobs.com",
-                        [user.email],
-                        fail_silently=True,  # error হলেও crash করবে না
-                    )
-                    print("Verification email sent to:", user.email)
-                except Exception as e:
-                    print("Email error:", e)
+            # def send_verification_email():
+            #     try:
+            #         send_mail(
+            #             "Verify your MYJOBS account",
+            #             f"Click to verify: {link}",
+            #             "noreply@myjobs.com",
+            #             [user.email],
+            #             fail_silently=True,  # error হলেও crash করবে না
+            #         )
+            #         print("Verification email sent to:", user.email)
+            #     except Exception as e:
+            #         print("Email error:", e)
 
-            thread = threading.Thread(target=send_verification_email)
-            thread.daemon = True
-            thread.start()
+            # thread = threading.Thread(target=send_verification_email)
+            # thread.daemon = True
+            # thread.start()
 
             messages.success(request, "Registration successful. Please verify your email.")
             return redirect('login')
@@ -56,31 +56,31 @@ def register(request):
 
 
 
-from django.utils.http import urlsafe_base64_decode
-from django.contrib.auth import get_user_model
-User = get_user_model()
+# from django.utils.http import urlsafe_base64_decode
+# from django.contrib.auth import get_user_model
+# User = get_user_model()
 
-def verify_email(request, uidb64, token):
-    try:
-        uid = urlsafe_base64_decode(uidb64).decode()
-        user = User.objects.get(pk=uid)
+# def verify_email(request, uidb64, token):
+#     try:
+#         uid = urlsafe_base64_decode(uidb64).decode()
+#         user = User.objects.get(pk=uid)
 
-        if email_token.check_token(user, token):
-            user.is_active = True
-            user.is_verified = True
-            user.save()
-            messages.success(
-                request,
-                "Email verified successfully."
-            )
-            return redirect('login')
+#         if email_token.check_token(user, token):
+#             user.is_active = True
+#             user.is_verified = True
+#             user.save()
+#             messages.success(
+#                 request,
+#                 "Email verified successfully."
+#             )
+#             return redirect('login')
 
-    except:
-        messages.error(
-            request,
-            "Verification failed."
-        )
-    return render(request, 'verify_failed.html')
+#     except:
+#         messages.error(
+#             request,
+#             "Verification failed."
+#         )
+#     return render(request, 'verify_failed.html')
 
 
 
