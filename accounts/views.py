@@ -15,30 +15,39 @@ from .forms import ProfileUpdateForm
 from django.contrib import messages
 
 
-# SIMPLIFIED EMAIL VERIFY FLOW
+import threading  # এটা যোগ করো উপরে
+
 def register(request):
     if request.method == "POST":
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            user.is_active = False  # MUST VERIFY EMAIL FIRST
+            user.is_active = False
             user.save()
 
             uid = urlsafe_base64_encode(force_bytes(user.pk))
             token = email_token.make_token(user)
-
             link = f"https://myjobs-platform.onrender.com/accounts/verify/{uid}/{token}/"
 
-            send_mail(
-                "Verify your MYJOBS account",
-                f"Click to verify: {link}",
-                "noreply@myjobs.com",
-                [user.email],
-                fail_silently=False,
-            )
+            # Email background thread এ পাঠাবে — user wait করবে না
+            def send_verification_email():
+                try:
+                    send_mail(
+                        "Verify your MYJOBS account",
+                        f"Click to verify: {link}",
+                        "noreply@myjobs.com",
+                        [user.email],
+                        fail_silently=True,  # error হলেও crash করবে না
+                    )
+                    print("Verification email sent to:", user.email)
+                except Exception as e:
+                    print("Email error:", e)
 
-            print("Verification email sent to:", user.email)
-            messages.success(request,"Registration successful. Please verify your email.")
+            thread = threading.Thread(target=send_verification_email)
+            thread.daemon = True
+            thread.start()
+
+            messages.success(request, "Registration successful. Please verify your email.")
             return redirect('login')
     else:
         form = RegisterForm()
