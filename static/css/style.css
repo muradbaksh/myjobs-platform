@@ -1,0 +1,365 @@
+body{
+    background:#f8fafc;
+    font-family:Inter,sans-serif;
+}
+
+.main-wrapper{
+    margin-top: 90px;
+}
+
+.custom-navbar{
+    background:#0f172a;
+    backdrop-filter:blur(10px);
+    box-shadow:0 4px 20px rgba(0,0,0,.08);
+}
+
+.brand-logo{
+    color:white !important;
+    font-size:1.5rem;
+    font-weight:700;
+}
+
+.nav-link{
+    color:#cbd5e1 !important;
+    font-weight:500;
+    transition:.3s;
+}
+
+.nav-link:hover{
+    color:white !important;
+}
+
+.search-box{
+    display:flex;
+    gap:10px;
+    width:320px;
+}
+
+.btn-search{
+    background:#2563eb;
+    color:white;
+}
+
+.btn-search:hover{
+    background:#1d4ed8;
+    color:white;
+}
+
+.card{
+    border:none;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:
+    0 10px 30px rgba(0,0,0,.08);
+}
+
+.btn-primary{
+    border:none;
+    background:#2563eb;
+}
+
+.btn-primary:hover{
+    background:#1d4ed8;
+}
+
+.alert{
+    border:none;
+    border-radius:12px;
+}
+
+@media(max-width:992px){
+
+    .search-box{
+        width:100%;
+        margin-top:15px;
+    }
+
+    .navbar-nav{
+        margin-top:15px;
+    }
+}
+
+
+/* --------- Back To Top Button--------- */
+#backToTop {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #2575fc, #6a11cb);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  opacity: 0;
+  visibility: hidden;
+  z-index: 1000;
+}
+
+#backToTop.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+#backToTop:hover {
+  transform: translateY(-5px) scale(1.1);
+  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+
+
+/*----------------------- Footer-------------------------------------------- */
+.footer {
+  background: linear-gradient(180deg, #0a0f1c, #000000);
+  color: #eee;
+  padding: 60px 70px 30px;
+  font-family: "Poppins", sans-serif;
+  margin-top: 80px;
+  position: relative;
+  overflow: hidden;
+  border-top: 6px solid transparent;
+  border-image: linear-gradient(90deg, #0f172a, #1e3a8a, #0f172a) 1;
+  border-radius: 4px 4px 0 0; /* smooth edges */
+
+}
+.footer p{
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+}
+/* Footer Container */
+.footer-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 40px;
+  max-width: 1400px;
+  margin: auto;
+  padding-bottom: 30px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Logo / About */
+.footer-col h3.logo {
+  font-size: 28px;
+  font-weight: 800;
+  color: #5a8dee; /* premium bluish tone */
+  margin-bottom: 15px;
+}
+
+.footer-col p {
+  font-size: 15px;
+  line-height: 1.7;
+  color: #bbb;
+  max-width: 300px;
+}
+
+/* Headings */
+.footer-col h4 {
+  margin-bottom: 18px;
+  font-size: 20px;
+  font-weight: 600;
+  color: #fff;
+  position: relative;
+}
+
+.footer-col h4::after {
+  content: "";
+  width: 60px;
+  height: 2px;
+  background: #4a90e2;
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+}
+
+/* Links */
+.footer-col ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-col ul li {
+  margin: 10px 0;
+  font-size: 15px;
+}
+
+.footer-col ul li a {
+  color: #bbb;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.footer-col ul li a:hover {
+  color: #4a90e2;
+  padding-left: 6px;
+}
+
+/* Social Icons */
+.footer-socials a {
+  display: inline-block;
+  margin-right: 12px;
+  font-size: 20px;
+  color: #bbb;
+  border: 1px solid #555;
+  border-radius: 8px;
+  padding: 8px 10px;
+  transition: 0.3s;
+}
+
+.footer-socials a:hover {
+  color: #fff;
+  background: #4a90e2;
+  border-color: #4a90e2;
+}
+
+/* Bottom Bar */
+.footer-bottom {
+  text-align: center;
+  padding: 15px 0 5px;
+  font-size: 14px;
+  color: #888;
+}
+
+/* Scroll to top button */
+.scroll-top {
+  position: fixed;
+  right: 25px;
+  bottom: 25px;
+  width: 42px;
+  height: 42px;
+  border: none;
+  outline: none;
+  border-radius: 50%;
+  background: #2563eb;
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.scroll-top:hover {
+  background: #1d4ed8;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .footer-container {
+    gap: 25px;
+  }
+
+  .footer-bottom {
+    font-size: 13px;
+  }
+}
+
+
+/* ---------------- WhatsApp Floating Button ---------------- */
+.whatsapp-float{
+    position: fixed;
+    left: 25px;
+    bottom: 25px;
+
+    width: 52px;
+    height: 52px;
+
+    background: #25D366;
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #fff;
+    font-size: 28px;
+    text-decoration: none;
+
+    z-index: 9999;
+
+    box-shadow: 0 6px 18px rgba(37,211,102,.4);
+
+    animation: pulse 2s infinite;
+    transition: all .3s ease;
+}
+
+/* Ripple Effect */
+.whatsapp-float::before,
+.whatsapp-float::after{
+    content: "";
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+
+    border-radius: 50%;
+    background: rgba(37,211,102,.4);
+
+    z-index: -1;
+
+    animation: ripple 2s infinite;
+}
+
+.whatsapp-float::after{
+    animation-delay: 1s;
+}
+
+/* Hover */
+.whatsapp-float:hover{
+    color: #fff;
+    background: #20ba5a;
+    transform: scale(1.1);
+}
+
+/* Icon Pulse */
+.whatsapp-icon{
+    animation: iconPulse 1.5s infinite;
+}
+
+/* Icon Small -> Large */
+@keyframes iconPulse{
+    0%{
+        transform: scale(1);
+    }
+    50%{
+        transform: scale(1.2);
+    }
+    100%{
+        transform: scale(1);
+    }
+}
+
+/* Outer Circle Wave */
+@keyframes ripple{
+    0%{
+        transform: scale(1);
+        opacity: .7;
+    }
+
+    100%{
+        transform: scale(1.8);
+        opacity: 0;
+    }
+}
+
+/* Main Button Pulse */
+@keyframes pulse{
+    0%{
+        box-shadow: 0 0 0 0 rgba(37,211,102,.5);
+    }
+
+    70%{
+        box-shadow: 0 0 0 20px rgba(37,211,102,0);
+    }
+
+    100%{
+        box-shadow: 0 0 0 0 rgba(37,211,102,0);
+    }
+}

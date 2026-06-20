@@ -1,0 +1,89 @@
+    <!--------------- Footer ------------- -->
+    <footer class="footer">
+        <div class="footer-container">
+            <!-- About -->
+            <div class="footer-col about">
+                <h3 class="logo">
+                    MYJOBS
+                </h3>
+
+                <p>
+                    Discover verified company reviews,
+                    salary insights and workplace experiences
+                    to make smarter career decisions.
+                </p>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="footer-col links">
+                <h4>Quick Links</h4>
+
+                <ul>
+                    <li><a href="/">Home</a></li>
+
+                    <li>
+                        <a href="{% url 'analytics' %}">
+                            Analytics
+                        </a>
+                    </li>
+
+                    {% if request.user.is_authenticated %}
+
+                    <li>
+                        <a href="{% url 'add_company' %}">
+                            Add Company
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'benchmark' %}">
+                            Salary Benchmark
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'profile' %}">
+                            Profile
+                        </a>
+                    </li>
+
+                    {% else %}
+
+                    <li>
+                        <a href="{% url 'login' %}">
+                            Login
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'register' %}">
+                            Register
+                        </a>
+                    </li>
+
+                    {% endif %}
+                </ul>
+            </div>
+
+            <!-- Connect -->
+            <div class="footer-col connect">
+                <h4>Connect</h4>
+                <div class="footer-socials">
+                    <a href="#"><i class="fa-brands fa-github"></i></a>
+                    <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+                    <a href="mailto:example@email.com"><i class="fa-solid fa-envelope"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom -->
+        <div class="footer-bottom">
+            <p>
+                © 2026 MYJOBS. All rights reserved.
+            </p>
+        </div>
+
+    </footer>
+
+
+    

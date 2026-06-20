@@ -1,0 +1,223 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="analytics-header">
+
+    <h1>Analytics Dashboard</h1>
+
+    <p>
+        Company reputation and salary insights
+    </p>
+
+</div>
+
+
+<h2>Top Companies</h2>
+
+<div class="row g-3">
+
+{% for c in companies %}
+
+<div class="col-lg-6 col-md-6 col-12">
+
+    <div class="analytics-card">
+
+        <div>
+            <h6>{{ c.company.name }}</h6>
+        </div>
+
+        <span class="score-badge">
+            ⭐ {{ c.score }}
+        </span>
+
+    </div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+
+<div class="chart-wrapper">
+    <canvas id="companyChart"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+const ctx =
+document.getElementById(
+'companyChart'
+);
+
+new Chart(ctx, {
+    type: 'bar',
+
+    data: {
+
+        labels: {{ labels|safe }},
+
+        datasets: [{
+
+            label: 'Employer Score',
+
+            data: {{ scores|safe }},
+
+
+            backgroundColor: [
+                '#4F46E5',
+                '#06B6D4',
+                '#10B981',
+                '#F59E0B',
+                '#EF4444',
+                '#8B5CF6',
+                '#14B8A6',
+                '#EC4899'
+            ],
+
+            borderRadius: 8
+
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false
+    }
+});
+
+</script>
+
+
+<h2>Industry Salary Insight</h2>
+
+{% for row in data %}
+
+    <p  class="analytics-row">
+    {{ row.company__industry }}
+            -
+    {{ row.avg_salary }}
+    </p>
+
+{% endfor %}
+
+
+
+
+<style>
+
+
+.container,
+body {
+    background: #f8fafc;
+}
+.analytics-header{
+    text-align:center;
+    margin-bottom:40px;
+}
+
+.analytics-header h1{
+    font-size:2rem;
+    font-weight:700;
+}
+
+.analytics-header p{
+    color:#64748b;
+}
+h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #111827;
+    margin: 30px 0 20px;
+}
+
+.analytics-card{
+    background:#fff;
+    border-radius:14px;
+    padding:18px;
+    border:1px solid #e5e7eb;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    transition:.3s;
+    height:100%;
+}
+
+.analytics-card:hover{
+    transform:translateY(-1px);
+
+    box-shadow:
+    0 8px 20px rgba(0,0,0,.08);
+}
+
+.analytics-card h6{
+    margin:0;
+    font-weight:600;
+    color:#111827;
+}
+
+.score-badge{
+    background:#2563eb;
+    color:white;
+
+    padding:8px 14px;
+    border-radius:999px;
+
+    font-size:.85rem;
+    font-weight:600;
+}
+
+.chart-wrapper{
+
+    width:100%;
+    background:#fff;
+
+    border-radius:16px;
+    padding:20px;
+
+    margin-top:30px;
+    margin-bottom:40px;
+
+    border:1px solid #e5e7eb;
+
+    overflow-x:auto;
+}
+
+#companyChart{
+
+    width:100% !important;
+    min-height:400px !important;
+}
+
+@media(max-width:768px){
+
+    .analytics-card{
+
+        flex-direction:column;
+        gap:12px;
+        text-align:center;
+    }
+    #companyChart{
+        min-height:300px !important;
+    }
+
+}
+@media(max-width:576px){
+
+    .container-xl{
+        padding-left:15px;
+        padding-right:15px;
+    }
+
+    .main-wrapper{
+        margin-top:80px;
+    }
+
+}
+</style>
+
+{% endblock %}

@@ -1,0 +1,1458 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<!-- HERO SECTION -->
+
+<section class="hero-section">
+
+    <div class="hero-wrapper">
+
+        <div class="row align-items-center g-5">
+
+            <div class="col-lg-7">
+
+                <span class="hero-badge">
+                    <span class="badge-dot"></span>
+                    Trusted by Professionals
+                </span>
+
+                <h1 class="hero-title">
+                    Find Better Companies,
+                    <span class="title-accent">Better Salaries</span> &amp;
+                    Better Career Decisions
+                </h1>
+
+                <p class="hero-description">
+                    Explore verified company reviews,
+                    compensation insights and workplace reputation
+                    from professionals across industries.
+                </p>
+
+                <div class="hero-buttons">
+
+                    <a href="#companies" class="btn-hero-primary">
+                        <i class="fa-solid fa-building"></i>
+                        Explore Companies
+                    </a>
+
+                    {% if not request.user.is_authenticated %}
+                    <a href="{% url 'register' %}" class="btn-hero-secondary">
+                        Get Started
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                    {% endif %}
+
+                </div>
+
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <div class="stat-num">{{ company_count }}<span>+</span></div>
+                        <div class="stat-label">Companies</div>
+                    </div>
+
+                    <div class="stat-item">
+                        <div class="stat-num">{{ review_count }}<span>+</span></div>
+                        <div class="stat-label">Reviews</div>
+                    </div>
+
+                    <div class="stat-item">
+                        <div class="stat-num">{{ salary_count }}<span>+</span></div>
+                        <div class="stat-label">Salary Reports</div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-lg-5">
+                <img
+                src="{% static 'images/myjobs.jpg' %}"
+                class="hero-image"
+                alt="career">
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- Myjobs Banner Section -->
+<section class="brand-banner-section">
+
+    <div class="brand-banner">
+
+        <img
+            src="{% static 'images/myjobs-banner-bottom.jpg' %}"
+            alt="MyJobs Logo"
+            class="brand-banner-logo">
+    </div>
+
+</section>
+
+<!-- COMPANY SECTION -->
+
+<section id="companies">
+
+    <div class="section-header">
+        <h2>Explore Companies</h2>
+        <p>Compare employer reputation, salaries and workplace experiences.</p>
+    </div>
+
+    <div class="row g-4">
+
+        {% if companies %}
+            {% for c in companies %}
+
+            <div class="col-lg-4 col-md-6">
+                <div class="company-card">
+
+                    <div class="company-top">
+                        <div>
+                            <h5 class="company-name">{{ c.name }}</h5>
+                            <span class="company-industry">{{ c.industry }}</span>
+                        </div>
+                        {% if c.is_verified %}
+                        <span class="verified-badge">
+                            <i class="fa-solid fa-circle-check"></i> Verified
+                        </span>
+                        {% endif %}
+                    </div>
+
+                    <div class="company-location">
+                        <i class="fa-solid fa-location-dot"></i>
+                        {{ c.location }}
+                    </div>
+
+                    <hr class="company-divider">
+
+                    <div class="company-metrics">
+                        <div class="metric-box">
+                            <small>Employer Score</small>
+                            <div class="metric-val">
+                                <span class="score-dot"></span>
+                                {{ c.reputation_score }}<span class="metric-suffix">/100</span>
+                            </div>
+                        </div>
+                        <div class="metric-box">
+                            <small>Reviews</small>
+                            <div class="metric-val">{{ c.total_reviews }}</div>
+                        </div>
+                    </div>
+
+                    <div class="salary-box">
+                        <span class="salary-label">
+                            <i class="fa-solid fa-bangladeshi-taka-sign"></i>
+                            Average Salary
+                        </span>
+                        <strong class="salary-val">
+                            ৳ {{ c.average_salary|floatformat:0 }}
+                        </strong>
+                    </div>
+
+                    <a href="{% url 'company_detail' c.id %}" class="btn-view-company">
+                        View Company
+                    </a>
+
+                </div>
+            </div>
+
+            {% endfor %}
+
+        {% else %}
+        <div class="col-12">
+            <div class="empty-state">
+                <h4>No Companies Found</h4>
+                <p>Try adding a company to get started.</p>
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+
+</section>
+
+
+<!-- ================================
+     TOP RATED COMPANIES
+================================ -->
+
+{% if top_companies %}
+<section class="top-rated-section">
+
+    <div class="section-header">
+        <h2>Top Rated Companies</h2>
+        <p>Highest employer scores from verified companies.</p>
+    </div>
+
+    <div class="top-rated-strip">
+        {% for c in top_companies %}
+        <a href="{% url 'company_detail' c.id %}" class="top-rated-card">
+            <div class="top-rank">#{{ forloop.counter }}</div>
+            <div class="top-info">
+                <div class="top-name">{{ c.name }}</div>
+                <div class="top-industry">{{ c.industry }}</div>
+            </div>
+            <div class="top-score">
+                <div class="score-val">{{ c.reputation_score }}</div>
+                <div class="score-sub">Score</div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+
+</section>
+{% endif %}
+
+
+<!-- ================================
+     INDUSTRY SALARY INSIGHTS
+================================ -->
+
+{% if industry_salaries %}
+<section class="insights-section">
+
+    <div class="section-header">
+        <h2>Industry Salary Insights</h2>
+        <p>Average base salaries across top industries.</p>
+    </div>
+
+    <div class="insights-grid">
+        {% for row in industry_salaries %}
+        <div class="insight-card">
+            <div class="insight-icon">
+                <i class="fa-solid fa-chart-simple"></i>
+            </div>
+            <div class="insight-industry">{{ row.company__industry }}</div>
+            <div class="insight-salary">
+                ৳ {{ row.avg_salary|floatformat:0 }}
+            </div>
+            <div class="insight-label">Avg. Monthly Salary</div>
+        </div>
+        {% endfor %}
+    </div>
+
+</section>
+{% endif %}
+
+
+<!-- ================================
+     RECENT REVIEWS FEED
+================================ -->
+
+{% if recent_reviews %}
+<section class="reviews-feed-section">
+
+    <div class="section-header">
+        <h2>Recent Reviews</h2>
+        <p>Anonymous feedback from verified professionals.</p>
+    </div>
+
+    <div class="row g-3">
+        {% for review in recent_reviews %}
+        <div class="col-md-6">
+            <div class="review-feed-card">
+                <div class="rf-top">
+                    <div class="rf-company">{{ review.company.name }}</div>
+                    <span class="rf-anon">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        Anonymous
+                    </span>
+                </div>
+                <div class="rf-scores">
+                    <div class="rf-score-item">
+                        <span class="rf-score-label">Work Env</span>
+                        <span class="rf-score-val">{{ review.work_environment }}/5</span>
+                    </div>
+                    <div class="rf-score-item">
+                        <span class="rf-score-label">Growth</span>
+                        <span class="rf-score-val">{{ review.career_growth }}/5</span>
+                    </div>
+                    <div class="rf-score-item">
+                        <span class="rf-score-label">Salary</span>
+                        <span class="rf-score-val">{{ review.salary_satisfaction }}/5</span>
+                    </div>
+                    <div class="rf-score-item">
+                        <span class="rf-score-label">Security</span>
+                        <span class="rf-score-val">{{ review.job_security }}/5</span>
+                    </div>
+                </div>
+                <div class="rf-footer">
+                    {% if review.recommendation %}
+                    <span class="rf-recommend yes">
+                        <i class="fa-solid fa-circle-check"></i>
+                        Recommends
+                    </span>
+                    {% else %}
+                    <span class="rf-recommend no">
+                        <i class="fa-solid fa-circle-xmark"></i>
+                        Does not recommend
+                    </span>
+                    {% endif %}
+                    <a href="{% url 'company_detail' review.company.id %}" class="rf-link">
+                        View Company <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+</section>
+{% endif %}
+
+
+<!-- ================================
+     HOW IT WORKS
+================================ -->
+
+<section class="how-it-works">
+
+    <div class="section-header">
+        <h2>How It Works</h2>
+        <p>A simple Give → Get model built on professional trust.</p>
+    </div>
+
+    <div class="hiw-grid">
+
+        <div class="hiw-card">
+            <div class="hiw-icon">
+                <i class="fa-solid fa-pen-to-square"></i>
+            </div>
+            <h6>Submit a Review</h6>
+            <p>Share your anonymous experience — ratings on work environment, salary, growth & more.</p>
+        </div>
+
+        <div class="hiw-arrow">
+            <i class="fa-solid fa-arrow-right"></i>
+        </div>
+
+        <div class="hiw-card">
+            <div class="hiw-icon">
+                <i class="fa-solid fa-coins"></i>
+            </div>
+            <h6>Earn Credits</h6>
+            <p>Each review earns you 10 credits. Salary submissions earn 5 credits per entry.</p>
+        </div>
+
+        <div class="hiw-arrow">
+            <i class="fa-solid fa-arrow-right"></i>
+        </div>
+
+        <div class="hiw-card">
+            <div class="hiw-icon">
+                <i class="fa-solid fa-chart-bar"></i>
+            </div>
+            <h6>Access Insights</h6>
+            <p>Use credits to unlock salary benchmarks, employer scores and industry analytics.</p>
+        </div>
+
+    </div>
+
+</section>
+
+
+
+
+<!-- Myjobs   Last Banner Section -->
+<section class="brand-banner-section">
+
+    <div class="brand-banner">
+
+        <img
+            src="{% static 'images/myjobs-logo.png' %}"
+            alt="MyJobs Logo"
+            class="brand-banner-logo">
+    </div>
+
+</section>
+
+<!-- ================================
+     CTA BANNER
+================================ -->
+{% comment %} 
+{% if not request.user.is_authenticated %}
+<section class="cta-banner">
+    <div class="cta-inner">
+        <div>
+            <h3>Ready to make smarter career decisions?</h3>
+            <p>Join thousands of professionals sharing and accessing verified workplace insights.</p>
+        </div>
+        <div class="cta-buttons">
+            <a href="{% url 'register' %}" class="btn-cta-primary">
+                Get Started Free
+            </a>
+            <a href="{% url 'login' %}" class="btn-cta-secondary">
+                Sign In
+            </a>
+        </div>
+    </div>
+</section>
+{% endif %}
+ {% endcomment %}
+
+<style>
+/* ==============================
+   MYJOBS FULL WIDTH BANNER
+============================== */
+
+.myjobs-fullbanner {
+    width: 100%;
+    background: #0f172a;
+    padding: 32px 0;
+    margin-top: 0;
+}
+
+.mfb-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+
+.mfb-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.mfb-logo-box {
+    width: 48px;
+    height: 48px;
+    background: #1d4ed8;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: #ffffff;
+    flex-shrink: 0;
+}
+
+.mfb-brand {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.mfb-name {
+    font-size: 20px;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.04em;
+    line-height: 1;
+}
+
+.mfb-name span {
+    color: #60a5fa;
+}
+
+.mfb-tagline {
+    font-size: 10.5px;
+    font-weight: 500;
+    color: #64748b;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+}
+
+.mfb-divider {
+    width: 1px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.1);
+    flex-shrink: 0;
+}
+
+.mfb-pills {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.mfb-pill {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 5px 12px;
+    border-radius: 50px;
+    font-size: 11.5px;
+    font-weight: 500;
+    color: #cbd5e1;
+}
+
+.mfb-pill i {
+    font-size: 12px;
+    color: #60a5fa;
+}
+
+.mfb-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.mfb-btn-primary {
+    display: inline-block;
+    background: #1d4ed8;
+    color: #ffffff !important;
+    padding: 10px 22px;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    transition: background 0.2s ease;
+}
+
+.mfb-btn-primary:hover {
+    background: #1e40af;
+    color: #ffffff !important;
+}
+
+.mfb-btn-secondary {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.07);
+    color: #e2e8f0 !important;
+    padding: 10px 22px;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    white-space: nowrap;
+    transition: background 0.2s ease;
+}
+
+.mfb-btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.13);
+    color: #ffffff !important;
+}
+
+@media (max-width: 768px) {
+    .mfb-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+    }
+    .mfb-divider {
+        display: none;
+    }
+    .mfb-right {
+        width: 100%;
+    }
+    .mfb-btn-primary,
+    .mfb-btn-secondary {
+        flex: 1;
+        text-align: center;
+    }
+}
+/* ======================
+   HERO SECTION
+====================== */
+
+.hero-section {
+    padding: 16px 0 44px;
+}
+
+.hero-wrapper {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 44px 48px;
+    border: 1px solid #e2e8f0;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-wrapper::before {
+    content: '';
+    position: absolute;
+    top: -80px;
+    right: -80px;
+    width: 280px;
+    height: 280px;
+    background: #eff6ff;
+    border-radius: 50%;
+    opacity: 0.5;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.hero-wrapper .row {
+    position: relative;
+    z-index: 1;
+}
+
+/* Badge */
+
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: #eff6ff;
+    color: #1d4ed8;
+    border: 1px solid #bfdbfe;
+    padding: 5px 14px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    margin-bottom: 20px;
+}
+
+.badge-dot {
+    width: 6px;
+    height: 6px;
+    background: #1d4ed8;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+/* Title */
+
+.hero-title {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    margin: 0 0 16px;
+}
+
+.title-accent {
+    color: #1d4ed8;
+}
+
+/* Description */
+
+.hero-description {
+    color: #64748b;
+    font-size: 14.5px;
+    line-height: 1.75;
+    margin-bottom: 28px;
+    max-width: 440px;
+    font-weight: 400;
+}
+
+/* Buttons */
+
+.hero-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 28px;
+}
+
+.btn-hero-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: #1d4ed8;
+    color: #ffffff !important;
+    padding: 10px 22px;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: background 0.2s ease;
+}
+
+.btn-hero-primary:hover {
+    background: #1e40af;
+    color: #ffffff !important;
+}
+
+.btn-hero-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: #ffffff;
+    color: #374151 !important;
+    padding: 10px 22px;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1px solid #e2e8f0;
+    letter-spacing: 0.02em;
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.btn-hero-secondary:hover {
+    border-color: #bfdbfe;
+    background: #f8fafc;
+    color: #374151 !important;
+}
+
+/* Stats bar — replaces the old separate stats section */
+
+.hero-stats {
+    display: flex;
+    border: 1px solid #f1f5f9;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #f8fafc;
+}
+
+.stat-item {
+    flex: 1;
+    padding: 12px 16px;
+    text-align: center;
+    border-right: 1px solid #f1f5f9;
+}
+
+.stat-item:last-child {
+    border-right: none;
+}
+
+.stat-num {
+    font-size: 16px;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    margin-bottom: 3px;
+}
+
+.stat-num span {
+    color: #1d4ed8;
+}
+
+.stat-label {
+    font-size: 10.5px;
+    font-weight: 600;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Image */
+
+.hero-image {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 14px;
+    border: 1px solid #e2e8f0;
+    display: block;
+}
+
+/* Mobile */
+
+@media (max-width: 768px) {
+    .hero-wrapper {
+        padding: 28px 24px;
+    }
+    .hero-title {
+        font-size: 1.7rem;
+    }
+    .hero-buttons {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .hero-stats {
+        flex-wrap: wrap;
+    }
+}
+
+
+/* ======================  BRAND BANNER  ====================== */
+
+.brand-banner-section{
+    margin: 14px 0 60px;
+}
+
+.brand-banner{
+    background: #ffffff;
+    border: 2px solid #e2e8f0;
+    border-radius: 20px;
+    padding: 10px 15px;
+    text-align: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.brand-banner::before{
+    content:'';
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:4px;
+    background:linear-gradient(
+        90deg,
+        #1d4ed8,
+        #3b82f6,
+        #60a5fa
+    );
+}
+
+.brand-banner-logo{
+    width:100%;
+    max-width: 100%;
+    height:auto;
+    display:block;
+    margin:auto;
+    object-fit:contain;
+}
+/* Large Screen */
+
+@media (min-width: 992px){
+
+    .brand-banner{
+        padding: 15px 20px;
+    }
+
+    .brand-banner-logo{
+        width:100%; 
+        max_width:1100px;
+        max-height:130px; /* adjust as needed */
+        object-fit:contain;
+        max-width:100%;
+    }
+}
+
+/* ======================
+Company card SECTION TITLE
+====================== */
+
+.section-header{
+    text-align:center;
+    margin-bottom: 40px;
+}
+
+.section-header h2{
+    font-weight:700;
+}
+
+.section-header p{
+    color:#64748b;
+}
+
+
+
+/* ==============================
+   COMPANY CARD
+============================== */
+
+.company-card {
+    background: #ffffff;
+    border: 2px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 18px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.company-card:hover {
+    border-color: #bfdbfe;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.08);
+}
+
+/* Header */
+
+.company-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+.company-name {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0 0 3px;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+}
+
+.company-industry {
+    font-size: 11px;
+    font-weight: 500;
+    color: #64748b;
+    letter-spacing: 0.01em;
+}
+
+.verified-badge {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    background: #f0fdf4;
+    color: #16a34a;
+    border: 1px solid #bbf7d0;
+    padding: 3px 9px;
+    border-radius: 50px;
+    font-size: 10.5px;
+    font-weight: 600;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+/* Location */
+
+.company-location {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11.5px;
+    font-weight: 500;
+    color: #64748b;
+    margin-bottom: 12px;
+}
+
+/* Divider */
+
+.company-divider {
+    border: none;
+    border-top: 1px solid #f1f5f9;
+    margin: 0 0 12px;
+}
+
+/* Metrics */
+
+.company-metrics {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.metric-box {
+    background: #f8fafc;
+    border: 1px solid #f1f5f9;
+    border-radius: 9px;
+    padding: 10px 12px;
+}
+
+.metric-box small {
+    display: block;
+    font-size: 10px;
+    font-weight: 600;
+    color: #94a3b8;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.metric-val {
+    font-size: 14px;
+    font-weight: 700;
+    color: #0f172a;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    line-height: 1;
+}
+
+.metric-suffix {
+    font-size: 10px;
+    font-weight: 500;
+    color: #94a3b8;
+}
+
+.score-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #22c55e;
+    flex-shrink: 0;
+}
+
+/* Salary */
+
+.salary-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f8fafc;
+    border: 1px solid #f1f5f9;
+    border-radius: 9px;
+    padding: 10px 12px;
+    margin-bottom: 12px;
+    margin-top: auto;
+}
+
+.salary-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    letter-spacing: 0.01em;
+}
+
+.salary-val {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #0f172a;
+    letter-spacing: -0.01em;
+}
+
+/* Button */
+
+.btn-view-company {
+    display: block;
+    width: 100%;
+    background: #1d4ed8;
+    color: #ffffff !important;
+    text-align: center;
+    padding: 9px 0;
+    border-radius: 8px;
+    font-size: 12.5px;
+    font-weight: 600;
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: background 0.2s ease;
+}
+
+.btn-view-company:hover {
+    background: #1e40af;
+    color: #ffffff !important;
+}
+
+/* ======================
+EMPTY STATE
+====================== */
+
+.empty-state{
+
+    background:white;
+
+    border-radius:20px;
+
+    padding:60px;
+
+    text-align:center;
+}
+
+
+/* ==============================
+   TOP RATED COMPANIES
+============================== */
+
+.top-rated-section {
+    margin-bottom: 60px;
+    margin-top: 60px;
+}
+
+.top-rated-strip {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.top-rated-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 14px 18px;
+    text-decoration: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.top-rated-card:hover {
+    border-color: #bfdbfe;
+    box-shadow: 0 4px 12px rgba(15,23,42,0.06);
+}
+
+.top-rank {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1d4ed8;
+    min-width: 28px;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    padding: 4px 8px;
+    text-align: center;
+}
+
+.top-info {
+    flex: 1;
+}
+
+.top-name {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 2px;
+}
+
+.top-industry {
+    font-size: 11px;
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+.top-score {
+    text-align: right;
+}
+
+.score-val {
+    font-size: 16px;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -0.02em;
+}
+
+.score-sub {
+    font-size: 10px;
+    font-weight: 600;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* ==============================
+   INDUSTRY SALARY INSIGHTS
+============================== */
+
+.insights-section {
+    margin-bottom: 60px;
+}
+
+.insights-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+}
+
+.insight-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 18px 16px;
+    text-align: center;
+    transition: border-color 0.2s;
+}
+
+.insight-card:hover {
+    border-color: #bfdbfe;
+}
+
+.insight-icon {
+    font-size: 20px;
+    color: #1d4ed8;
+    margin-bottom: 10px;
+}
+
+.insight-industry {
+    font-size: 12px;
+    font-weight: 600;
+    color: #64748b;
+    margin-bottom: 8px;
+    line-height: 1.3;
+}
+
+.insight-salary {
+    font-size: 17px;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -0.02em;
+    margin-bottom: 4px;
+}
+
+.insight-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* ==============================
+   RECENT REVIEWS FEED
+============================== */
+
+.reviews-feed-section {
+    margin-bottom: 60px;
+}
+
+.review-feed-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 16px;
+    height: 100%;
+    transition: border-color 0.2s;
+}
+
+.review-feed-card:hover {
+    border-color: #bfdbfe;
+}
+
+.rf-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+
+.rf-company {
+    font-size: 13px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.rf-anon {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10.5px;
+    font-weight: 600;
+    color: #64748b;
+    background: #f8fafc;
+    border: 1px solid #f1f5f9;
+    padding: 3px 8px;
+    border-radius: 50px;
+}
+
+.rf-scores {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-bottom: 12px;
+}
+
+.rf-score-item {
+    background: #f8fafc;
+    border-radius: 8px;
+    padding: 7px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.rf-score-label {
+    font-size: 10.5px;
+    font-weight: 600;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.rf-score-val {
+    font-size: 12px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.rf-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 10px;
+    border-top: 1px solid #f1f5f9;
+}
+
+.rf-recommend {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.rf-recommend.yes { color: #16a34a; }
+.rf-recommend.no  { color: #dc2626; }
+
+.rf-link {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #1d4ed8;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.rf-link:hover { color: #1e40af; }
+
+/* ==============================
+   HOW IT WORKS
+============================== */
+
+.how-it-works {
+    margin-bottom: 60px;
+}
+
+.hiw-grid {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.hiw-card {
+    flex: 1;
+    min-width: 180px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 22px 18px;
+    text-align: center;
+}
+
+.hiw-icon {
+    width: 44px;
+    height: 44px;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: #1d4ed8;
+    margin: 0 auto 14px;
+}
+
+.hiw-card h6 {
+    font-size: 13px;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 6px;
+}
+
+.hiw-card p {
+    font-size: 12px;
+    color: #64748b;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.hiw-arrow {
+    font-size: 14px;
+    color: #cbd5e1;
+    flex-shrink: 0;
+}
+
+/* ==============================
+   CTA BANNER
+============================== */
+
+.cta-banner {
+    background: #0f172a;
+    border-radius: 16px;
+    padding: 40px 44px;
+    margin-bottom: 60px;
+}
+
+.cta-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.cta-banner h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0 0 8px;
+    line-height: 1.3;
+}
+
+.cta-banner p {
+    font-size: 13px;
+    color: #94a3b8;
+    margin: 0;
+    line-height: 1.6;
+    max-width: 380px;
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 10px;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+}
+
+.btn-cta-primary {
+    display: inline-block;
+    background: #1d4ed8;
+    color: #ffffff !important;
+    padding: 10px 22px;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+
+.btn-cta-primary:hover { background: #1e40af; }
+
+.btn-cta-secondary {
+    display: inline-block;
+    background: rgba(255,255,255,0.08);
+    color: #e2e8f0 !important;
+    padding: 10px 22px;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1px solid rgba(255,255,255,0.15);
+    transition: background 0.2s;
+}
+
+.btn-cta-secondary:hover {
+    background: rgba(255,255,255,0.14);
+}
+
+@media (max-width: 768px) {
+    .hiw-arrow { display: none; }
+    .hiw-grid { flex-direction: column; }
+    .hiw-card { width: 100%; }
+    .cta-inner { flex-direction: column; align-items: flex-start; }
+    .cta-banner { padding: 28px 24px; }
+    .insights-grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* ======================
+MOBILE
+====================== */
+
+@media(max-width:768px){
+
+    .hero-title{
+
+        font-size:2rem;
+    }
+
+    .hero-section{
+
+        text-align:center;
+    }
+
+    .hero-buttons{
+
+        justify-content:center;
+    }
+
+    .company-top{
+
+        flex-direction:column;
+        align-items:flex-start;
+        gap:10px;
+    }
+
+}
+
+</style>
+{% endblock %}

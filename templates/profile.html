@@ -1,0 +1,611 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<section class="profile-page">
+
+    <!-- PROFILE HERO -->
+
+    <div class="profile-hero">
+
+        {% if request.user.profile_picture %}
+
+        <img src="{{ request.user.profile_picture.url }}"
+            class="profile-hero-avatar-img"
+            alt="Profile">
+
+        {% else %}
+
+        <div class="profile-hero-avatar">
+            {{ request.user.username|first|upper }}
+        </div>
+
+        {% endif %}
+
+        <div class="profile-info">
+
+            <h1 class="profile-name">
+                {{ request.user.username }}
+            </h1>
+
+            <p class="profile-email">
+                {{ request.user.email }}
+            </p>
+
+            <div class="profile-meta">
+
+                <span class="profile-tag">
+                    {{ request.user.industry|default:"Industry Not Set" }}
+                </span>
+
+                {% if request.user.is_verified %}
+                    <span class="profile-tag verified">
+                        ✓ Verified
+                    </span>
+                {% else %}
+                    <span class="profile-tag unverified">
+                        Not Verified
+                    </span>
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        <div class="profile-actions">
+
+            <a href="{% url 'profile_update' %}"
+               class="btn btn-primary">
+
+                Update Profile
+
+            </a>
+
+            <a href="{% url 'password_change' %}"
+               class="btn btn-outline-secondary">
+
+                Change password
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- STATS -->
+
+    <div class="row g-4 mt-1">
+
+        <div class="col-md-4">
+
+            <div class="stat-card">
+
+                <small>Industry</small>
+
+                <h4>
+                    {{ request.user.industry|default:"Not Set" }}
+                </h4>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="stat-card">
+
+                <small>Experience</small>
+
+                <h4>
+                    {{ request.user.experience }} Years
+                </h4>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="stat-card">
+
+                <small>Credits</small>
+
+                <h4>
+                    {{ request.user.credits }}
+                </h4>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- CONTENT AREA -->
+
+    <div class="row mt-4 g-4">
+
+        <!-- REVIEWS -->
+
+        <div class="col-lg-6">
+
+            <div class="dashboard-card">
+
+                <div class="card-top">
+
+                    <h4>Your Reviews</h4>
+
+                    <span class="badge bg-primary">
+
+                         Total Reviews : {{ reviews|length }}
+
+                    </span>
+
+                </div>
+
+                {% if reviews %}
+
+                    {% for r in reviews %}
+
+                    <div class="item-row">
+
+                        <div>
+
+                            <strong>
+                                {{ r.company.name }}
+                            </strong>
+
+                            <p>
+                                Brand Value:
+                                {{ r.brand_value }}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <div class="empty-box">
+
+                        No reviews submitted yet.
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+        <!-- SALARIES -->
+
+        <div class="col-lg-6">
+
+            <div class="dashboard-card">
+
+                <div class="card-top">
+
+                    <h4>Your Salary Data</h4>
+
+                    <span class="badge bg-success">
+
+                       Total : {{ salaries|length }}
+
+                    </span>
+
+                </div>
+
+                {% if salaries %}
+
+                    {% for s in salaries %}
+
+                    <div class="item-row">
+
+                        <div>
+
+                            <strong>
+                                {{ s.company.name }}
+                            </strong>
+
+                            <p>
+                                Salary:
+                                {{ s.base_salary }}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <div class="empty-box">
+
+                        No salary data submitted.
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ACCOUNT SUMMARY -->
+
+    <div class="dashboard-card mt-4">
+
+        <div class="card-top">
+
+            <h4>Account Summary</h4>
+
+        </div>
+
+        <div class="row g-4">
+
+            <div class="col-md-3">
+
+                <div class="summary-box">
+
+                    <h5>
+                        {{ reviews|length }}
+                    </h5>
+
+                    <small>Total Reviews</small>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <div class="summary-box">
+
+                    <h5>
+                        {{ salaries|length }}
+                    </h5>
+
+                    <small>Salary Entries</small>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <div class="summary-box">
+
+                    <h5>
+                        {{ request.user.credits }}
+                    </h5>
+
+                    <small>Credits</small>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <div class="summary-box">
+                <h5>
+                    {% if request.user.is_verified %}
+                        Yes
+                    {% else %}
+                        No
+                    {% endif %}
+                </h5>
+                <small>Verified</small>
+               
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<style>
+
+/* =========================
+   PROFILE PAGE
+========================= */
+
+.profile-page {
+    max-width: 1400px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+/* =========================
+   HERO SECTION
+========================= */
+
+.profile-hero {
+    background: #fff;
+    border-radius: 20px;
+    padding: 30px;
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+    margin-bottom: 30px;
+    border: 1px solid #eef1f5;
+}
+
+.profile-hero-avatar {
+    width: 90px;
+    height: 90px;
+    min-width: 90px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #0d6efd, #4f8cff);
+    color: #fff;
+    font-size: 34px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.profile-hero-avatar-img{
+    width: 90px;
+    height: 90px;
+    min-width: 90px;
+
+    border-radius: 50%;
+    object-fit: cover;
+
+    border: 4px solid #fff;
+
+    box-shadow: 0 8px 25px rgba(0,0,0,.15);
+}
+.profile-info {
+    flex: 1;
+}
+
+.profile-name {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 700;
+    color: #222;
+}
+
+.profile-email {
+    margin: 8px 0 15px;
+    color: #6c757d;
+    font-size: 15px;
+}
+
+.profile-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.profile-tag {
+    background: #f5f7fa;
+    padding: 8px 14px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #555;
+}
+
+.profile-tag.verified {
+    background: #d1f7df;
+    color: #0f9d58;
+}
+
+.profile-tag.unverified {
+    background: #ffe3e3;
+    color: #dc3545;
+}
+
+.profile-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+/* =========================
+   STAT CARDS
+========================= */
+
+.stat-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 24px;
+    text-align: center;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    border: 1px solid #edf0f4;
+    height: 100%;
+    transition: 0.3s;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+}
+
+.stat-card small {
+    color: #6c757d;
+    font-size: 14px;
+}
+
+.stat-card h4 {
+    margin-top: 10px;
+    font-weight: 700;
+    color: #222;
+}
+
+/* =========================
+   DASHBOARD CARDS
+========================= */
+
+.dashboard-card {
+    background: #fff;
+    border-radius: 18px;
+    padding: 25px;
+    border: 1px solid #edf0f4;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+    height: 100%;
+}
+
+.card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.card-top h4 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: #222;
+}
+
+/* =========================
+   LIST ITEMS
+========================= */
+
+.item-row {
+    padding: 15px 0;
+    border-bottom: 1px solid #f1f3f5;
+}
+
+.item-row:last-child {
+    border-bottom: none;
+}
+
+.item-row strong {
+    display: block;
+    font-size: 16px;
+    color: #222;
+    margin-bottom: 5px;
+}
+
+.item-row p {
+    margin: 0;
+    color: #6c757d;
+    font-size: 14px;
+}
+
+/* =========================
+   EMPTY STATE
+========================= */
+
+.empty-box {
+    text-align: center;
+    padding: 40px 20px;
+    background: #fafbfc;
+    border-radius: 12px;
+    color: #6c757d;
+    border: 1px dashed #d8dee6;
+}
+
+/* =========================
+   ACCOUNT SUMMARY
+========================= */
+
+.summary-box {
+    background: #f8fafc;
+    border-radius: 16px;
+    text-align: center;
+    padding: 25px 15px;
+    border: 1px solid #edf0f4;
+    transition: 0.3s;
+    height: 100%;
+}
+
+.summary-box:hover {
+    background: #fff;
+    transform: translateY(-3px);
+}
+
+.summary-box h5 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 700;
+    color: #0d6efd;
+}
+
+.summary-box small {
+    color: #6c757d;
+    font-size: 14px;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.btn-primary {
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-weight: 600;
+}
+
+.btn-outline-secondary {
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-weight: 600;
+}
+
+/* =========================
+   BADGES
+========================= */
+
+.badge {
+    padding: 8px 12px;
+    font-size: 13px;
+    border-radius: 8px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 992px) {
+
+    .profile-hero {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .profile-meta {
+        justify-content: center;
+    }
+
+    .profile-actions {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .profile-name {
+        font-size: 24px;
+    }
+
+    .profile-hero-avatar {
+        width: 80px;
+        height: 80px;
+        font-size: 28px;
+    }
+
+    .dashboard-card,
+    .stat-card {
+        padding: 20px;
+    }
+}
+
+</style>
+{% endblock %}

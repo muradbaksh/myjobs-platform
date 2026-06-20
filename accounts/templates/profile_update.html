@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+        <h2>Update Profile</h2>
+        <p>Keep your profile information up to date</p>
+    </div>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form | crispy}}
+        <button class="btn btn-danger">Update</button>
+    </form>
+
+<style>
+
+</style>
+{% endblock %}
+
+      
