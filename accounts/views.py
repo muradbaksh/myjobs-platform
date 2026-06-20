@@ -27,7 +27,7 @@ def register(request):
             uid = urlsafe_base64_encode(force_bytes(user.pk))
             token = email_token.make_token(user)
 
-            link = f"http://127.0.0.1:8000/accounts/verify/{uid}/{token}/"
+            link = f"https://myjobs-platform.onrender.com/accounts/verify/{uid}/{token}/"
 
             send_mail(
                 "Verify your MYJOBS account",
